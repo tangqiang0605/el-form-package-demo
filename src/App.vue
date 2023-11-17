@@ -3,14 +3,14 @@
 </template>
 
 <script lang="tsx" setup>
-import { ref, h } from "vue";
+import { ref, h, markRaw, resolveComponent } from "vue";
 import CustomForm from "./CustomForm.vue";
 // import { ElButton } from "element-plus";
 import { ElInput, ElSwitch } from "element-plus";
 
 const form = ref<any>({});
 // name字段名，后面提示
-const items = {
+const items = ref({
   // 默认input
   name: "姓名",
   input2: {
@@ -19,7 +19,7 @@ const items = {
   },
   switch1: {
     label: "开关1",
-    inner: ElSwitch,
+    inner: markRaw(ElInput),
     // inner: "el-switch",
     // inner: h(ElInput),
   },
@@ -36,7 +36,11 @@ const items = {
   //     type: "date",
   //   },
   // },
-};
+});
+
+// setTimeout(() => {
+//   console.log(items.value);
+// }, 2000);
 
 // TODO 多层传参
 // TODO 日期选择报黄

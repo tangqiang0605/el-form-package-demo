@@ -12,3 +12,13 @@ https://zhuanlan.zhihu.com/p/423860019?utm_id=0&wd=&eqid=afdc27b5000037d80000000
    使用 vue 提供的 defineComponent，接收一个对象，和 export default 是一样的。使用 props 对象定义属性。在 setup 中接收 props。
 
 方案二：h 函数
+
+## 动态表单
+
+1. 不可直接新增 ref 的属性。
+2. 组件要用 markRaw 包裹，用字符串就不用。
+
+## 自动导入
+
+暂时不支持自动导入写法。
+全局导入可以直接使用字符串。

@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { markRaw, onBeforeUpdate, onMounted, ref } from "vue";
+import { markRaw, onBeforeUpdate, onMounted, ref, watch } from "vue";
 
 // defineProp
 const prop = defineProps<{
@@ -33,6 +33,7 @@ const onSubmit = () => {
 const newFormItem = ref({});
 const genNewFormItem = () => {
   newFormItem.value = { ...prop.formItem };
+
   const keys = Object.keys(prop.formItem);
   for (let key of keys) {
     let column = prop.formItem[key];
@@ -98,6 +99,9 @@ const genNewFormItem = () => {
   }
   console.log(newFormItem.value);
 };
+
+// watch不生效
+// watch(() => prop.formItem, genNewFormItem, { immediate: true });
 onMounted(genNewFormItem);
 onBeforeUpdate(genNewFormItem);
 </script>
