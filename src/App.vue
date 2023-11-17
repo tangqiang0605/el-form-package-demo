@@ -2,19 +2,47 @@
   <CustomForm :form="form" :formItem="items"></CustomForm>
 </template>
 
-<script lang="ts" setup>
-import { reactive } from "vue";
+<script lang="tsx" setup>
+import { ref, h } from "vue";
 import CustomForm from "./CustomForm.vue";
-// 使用items替代form
-const form = reactive({});
+// import { ElButton } from "element-plus";
+import { ElInput, ElSwitch } from "element-plus";
 
+const form = ref<any>({});
 // name字段名，后面提示
 const items = {
+  // 默认input
   name: "姓名",
-  id: "工号",
-  age: "年龄",
+  input2: {
+    inner: "el-input",
+    label: "输入2",
+  },
+  switch1: {
+    label: "开关1",
+    inner: ElSwitch,
+    // inner: "el-switch",
+    // inner: h(ElInput),
+  },
+  switch2: {
+    label: "开关2",
+    inner: {
+      is: "el-switch",
+    },
+  },
+  // date: {
+  //   label: "日期选择",
+  //   inner: {
+  //     is: "el-date-picker",
+  //     type: "date",
+  //   },
+  // },
 };
 
+// TODO 多层传参
+// TODO 日期选择报黄
+// 支持item内插槽
+// 支持form插槽
+// 支持自动导入
 // const onSubmit = () => {
 //   console.log(form)
 //   // console.log("submit!");

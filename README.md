@@ -1,18 +1,14 @@
-# Vue 3 + TypeScript + Vite
+支持 tsx
+pnpm i @vitejs/plugin-vue-jsx -D
+https://zhuanlan.zhihu.com/p/423860019?utm_id=0&wd=&eqid=afdc27b5000037d800000003645f575a
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+使用：
 
-## Recommended IDE Setup
+1. vue 文件中
+   script 使用 jsx 作为 lang，可以书写 fc，并在 template 以函数名引用
+   script 中 export default 对象的 setup 中书写 fc，并返回函数名。不需要书写 template。
+2. jsx 文件中
+   使用 vue 提供的 defineComponent，接收一个函数，该函数和 setup 类似，并返回函数名。
+   使用 vue 提供的 defineComponent，接收一个对象，和 export default 是一样的。使用 props 对象定义属性。在 setup 中接收 props。
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Type Support For `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+方案二：h 函数

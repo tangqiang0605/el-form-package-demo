@@ -1,11 +1,14 @@
 <template>
   <el-form :model="form">
+    <!-- TODO item是绑定到组件上，但是没有进行过滤 -->
     <el-form-item v-for="item in newFormItem" v-bind="item">
-      <el-input v-model="form[item.key]" />
+      <component
+        v-if="item.inner"
+        v-model="form[item.prop]"
+        :is="item.inner.is"
+        v-bind="item.inner"
+      ></component>
     </el-form-item>
-    <!-- <el-form-item label="Activity name">
-      <el-input v-model="form.name" />
-    </el-form-item> -->
     <el-form-item>
       <el-button type="primary" @click="onSubmit">Create</el-button>
       <el-button>Cancel</el-button>
@@ -14,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { markRaw, onBeforeUpdate, onMounted, ref } from "vue";
 
 // defineProp
 const prop = defineProps<{
@@ -39,11 +42,13 @@ const genNewFormItem = () => {
         key: key,
         prop: key,
         label: column,
+        inner: { is: "el-input" },
       });
     }
 
     if (typeof column === "object") {
       // 设置默认属性
+      // TODO 可以直接使用lodash的defaults
       if (!Reflect.has(column, "key")) {
         Reflect.set(column, "key", key);
       }
@@ -53,7 +58,30 @@ const genNewFormItem = () => {
       if (!Reflect.has(column, "prop")) {
         Reflect.set(column, "prop", key);
       }
-      // defaults
+
+      if (Reflect.has(column, "inner")) {
+        const comp = Reflect.get(column, "inner");
+        if (typeof comp === "string") {
+          Reflect.set(column, "inner", { is: comp });
+        } else if (typeof comp === "object" && comp) {
+          // comp就是column['inner']
+          if (Reflect.has(comp, "is")) {
+            if (typeof Reflect.get(comp, "is") === "string") {
+            } else {
+              // 对组件进行markRaw
+              // Object.assign
+              Reflect.set(column, "inner", {
+                ...comp,
+                is: markRaw(comp.is),
+              });
+            }
+          } else {
+            // 对组件进行markRaw
+            Reflect.set(column, "inner", { is: markRaw(comp) });
+          }
+        }
+      }
+      //
       // 处理插槽
       // const slotKeys = Object.keys(slots);
       // for (let key of slotKeys) {
@@ -70,9 +98,8 @@ const genNewFormItem = () => {
   }
   console.log(newFormItem.value);
 };
-// onMounted(genNewTableHeader);
-// onBeforeUpdate(genNewTableHeader);
 onMounted(genNewFormItem);
+onBeforeUpdate(genNewFormItem);
 </script>
 
 <style scoped></style>
