@@ -5,17 +5,8 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 import CustomForm from "./CustomForm.vue";
-// do not use same name with ref
-const form = reactive({
-  name: "",
-  region: "",
-  date1: "",
-  date2: "",
-  delivery: false,
-  type: [],
-  resource: "",
-  desc: "",
-});
+// 使用items替代form
+const form = reactive({});
 
 // name字段名，后面提示
 const items = {
@@ -25,6 +16,7 @@ const items = {
 };
 
 // const onSubmit = () => {
-//   console.log("submit!");
+//   console.log(form)
+//   // console.log("submit!");
 // };
 </script>
