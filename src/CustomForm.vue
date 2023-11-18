@@ -4,7 +4,7 @@
     <el-form-item v-for="item in newFormItem" v-bind="item">
       <component
         v-if="item.inner"
-        v-model="form[item.prop]"
+        v-model="proxys[item.prop]"
         :is="item.inner.is"
         v-bind="item.inner"
       ></component>
@@ -17,7 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import { markRaw, onBeforeUpdate, onMounted, ref, watch } from "vue";
+import { set, get } from "lodash-es";
+import { compile, markRaw, onBeforeUpdate, onMounted, ref, watch } from "vue";
 
 // defineProp
 const prop = defineProps<{
@@ -36,7 +37,7 @@ const genNewFormItem = () => {
 
   const keys = Object.keys(prop.formItem);
   for (let key of keys) {
-    let column = prop.formItem[key];
+    let column: any = prop.formItem[key];
     // 预处理
     if (typeof column === "string") {
       Reflect.set(newFormItem.value, key, {
@@ -58,7 +59,18 @@ const genNewFormItem = () => {
       }
       if (!Reflect.has(column, "prop")) {
         Reflect.set(column, "prop", key);
+      } else if (Array.isArray(column["prop"])) {
+        column["prop"] = column["prop"].reduce((pre, cur) => {
+          if (isNaN(Number(cur))) {
+            return pre + "." + cur;
+          } else {
+            return pre + "[" + cur + "]";
+          }
+        });
+        console.log(column["prop"]);
       }
+      // if()
+      // 对prop进行处理
 
       if (Reflect.has(column, "inner")) {
         const comp = Reflect.get(column, "inner");
@@ -95,11 +107,33 @@ const genNewFormItem = () => {
       //     Reflect.set(Reflect.get(column, "slot"), res[1], res[0]);
       //   }
       // }
+      // 直接对form进行修改，赋初始值，在保证有prop后进行。prop标识属性在form中的位置
+      if (Reflect.has(column, "default")) {
+        // 这里的prop还不支持多层路径写法
+        // Reflect.set(prop.form, column.prop, column.default);
+        // prop:string / string[]
+        set(prop.form, column.prop, column.default);
+      }
     }
   }
+
   console.log(newFormItem.value);
 };
-
+const proxys = new Proxy(prop.form, {
+  get: function (target, property) {
+    // function返回值用于读取
+    // console.log(target)
+    // console.log(form)
+    return get(target, property);
+    // 如果是数组怎么办？预处理时将其转换为字符串
+  },
+  set: function (target, property, value) {
+    // console.log(value)
+    set(target, property, value);
+    return true;
+  },
+});
+// TODO 无法处理多层嵌套
 // watch不生效
 // watch(() => prop.formItem, genNewFormItem, { immediate: true });
 onMounted(genNewFormItem);

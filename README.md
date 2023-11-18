@@ -22,3 +22,8 @@ https://zhuanlan.zhihu.com/p/423860019?utm_id=0&wd=&eqid=afdc27b5000037d80000000
 
 暂时不支持自动导入写法。
 全局导入可以直接使用字符串。
+
+## v-model 问题
+
+1. 无法绑定表达式。new function 不行，不支持 jsx。最后通过代理+lodash 解决了。
+2. 无法绑定到变量组件，需要预先写好 el-input 才能绑定 v-model。h 可以传入其它参数，但是不能接收 v-model。

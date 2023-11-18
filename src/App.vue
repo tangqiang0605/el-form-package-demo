@@ -1,39 +1,41 @@
 <template>
   <CustomForm :form="form" :formItem="items"></CustomForm>
+  <!-- <CForm :form="form" :form-item="items" @submit="onSubmit"></CForm> -->
+  <!-- <Normal></Normal> -->
 </template>
 
 <script lang="tsx" setup>
-import { ref, h, markRaw, resolveComponent } from "vue";
+// import { ref, h, markRaw, resolveComponent } from "vue";
 import CustomForm from "./CustomForm.vue";
+import CForm from "./CForm";
+import Normal from "./Normal";
+import { ref, markRaw } from "vue";
+import { ElInput } from "element-plus";
 // import { ElButton } from "element-plus";
-import { ElInput, ElSwitch } from "element-plus";
+// import { ElInput, ElSwitch } from "element-plus";
 
 const form = ref<any>({});
 // name字段名，后面提示
 const items = ref({
   // 默认input
   name: "姓名",
-  input2: {
-    inner: "el-input",
-    label: "输入2",
-  },
+  // input2: {
+  //   inner: "el-input",
+  //   label: "输入2",
+  //   default: "默认输入2",
+  // },
   switch1: {
     label: "开关1",
-    inner: markRaw(ElInput),
-    // inner: "el-switch",
-    // inner: h(ElInput),
+    inner: "el-input",
+    // inner: markRaw(ElInput),
+    // prop: "a[0].b.c",
+    prop: ["a", "c", "b", "c"],
+    // 如果输入数组，会在被proxys使用前转换为字符串，即['a','b']转换为'a,b'
   },
-  switch2: {
-    label: "开关2",
-    inner: {
-      is: "el-switch",
-    },
-  },
-  // date: {
-  //   label: "日期选择",
+  // switch2: {
+  //   label: "开关2",
   //   inner: {
-  //     is: "el-date-picker",
-  //     type: "date",
+  //     is: "el-switch",
   //   },
   // },
 });
@@ -44,11 +46,11 @@ const items = ref({
 
 // TODO 多层传参
 // TODO 日期选择报黄
-// 支持item内插槽
-// 支持form插槽
-// 支持自动导入
-// const onSubmit = () => {
-//   console.log(form)
-//   // console.log("submit!");
-// };
+// TODO 支持item内插槽
+// TODO 支持form插槽
+// TODO 支持自动导入
+const onSubmit = () => {
+  console.log("外部得到的值", form.value);
+  // console.log("submit!");
+};
 </script>
