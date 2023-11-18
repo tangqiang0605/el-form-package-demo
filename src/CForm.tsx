@@ -1,34 +1,29 @@
 
-import { defineComponent, ref, onMounted, onBeforeUpdate, markRaw, h, resolveComponent, } from 'vue'
+import { defineComponent, ref, onMounted, onBeforeUpdate, markRaw, h, resolveComponent, defineExpose, toRaw } from 'vue'
 import { get, set, toPairs, omit } from 'lodash-es'
 
 // const myInput = h(resolveComponent('el-input'))
 
 
 export default defineComponent({
-  components: ['myInput', 'el-input', 'el-switch'],
   props: {
     form: Object,
     formItem: Object,
   },
-  name: 'mz', emits: ['submit'],
-  setup(prop, { emit }) {
+  emits: ['submit'],
+  setup(this, prop, { emit, expose, attrs }) {
     const { form, formItem } = prop;
 
     const onSubmit = () => {
       console.log(form, prop.form);
       emit('submit')
+      console.log(normalRef)
     }
 
 
     const newFormItem = ref({});
     const genNewFormItem = () => {
       newFormItem.value = { ...prop.formItem };
-
-      // 为了支持遍历，
-
-      // console.LockManager(new)
-
       const keys = Object.keys(prop.formItem);
       for (let key of keys) {
         let column = prop.formItem[key];
@@ -39,20 +34,21 @@ export default defineComponent({
             prop: key,
             label: column,
             inner: { is: h(resolveComponent("el-input")) },
+            ref: ref({})
           });
         }
-
         if (typeof column === "object") {
-
-          // 设置默认属性
-          // TODO 可以直接使用lodash的defaults
+          // 设置默认属性，可以直接使用lodash的defaults
           if (!Reflect.has(column, "key")) {
             Reflect.set(column, "key", key);
           }
           if (!Reflect.has(column, "label")) {
             Reflect.set(column, "label", key);
           }
-          // console.log(column)
+          if (!Reflect.has(column, "ref")) {
+            // Reflect.set(column, "ref", ref());
+            column.ref = ref<any>()
+          }
           if (!Reflect.has(column, "prop")) {
             Reflect.set(column, "prop", key);
           } else if (Array.isArray(column['prop'])) {
@@ -71,9 +67,7 @@ export default defineComponent({
                 return pre + "[" + cur + "]";
               }
             });
-            // console.log(column['prop']);
           }
-
           if (Reflect.has(column, "inner")) {
             const comp = Reflect.get(column, "inner");
             if (typeof comp === "string") {
@@ -84,7 +78,6 @@ export default defineComponent({
                 if (typeof Reflect.get(comp, "is") === "string") {
                 } else {
                   // 对组件进行markRaw
-                  // Object.assign
                   Reflect.set(column, "inner", {
                     ...comp,
                     is: markRaw(comp.is),
@@ -111,15 +104,13 @@ export default defineComponent({
           // }
           // 直接对form进行修改，赋初始值，在保证有prop后进行。prop标识属性在form中的位置
           if (Reflect.has(column, "default")) {
-            // 这里的prop还不支持多层路径写法
-            // Reflect.set(prop.form, column.prop, column.default);
             // prop:string / string[]
             set(prop.form, column.prop, column.default);
           }
         }
       }
 
-      // console.log(newFormItem.value);
+      console.log(newFormItem.value.name);
       // toPairs(newFormItem.value).forEach(([key, value]) => {
       //   console.log(value.inner.is)
       // })
@@ -146,25 +137,32 @@ export default defineComponent({
       }
     })
 
-    // const myInput = (str) => <></>
+    let normalRef = {}
+    onMounted(() => {
+      console.log(formRef.value.validate())
+      normalRef.son = ref()
+    })
+
+
+    // 暴露事件
+    const formRef = ref<any>()
+    expose({
+      validate: () => formRef.value.validate()
+      // 自行添加。。。
+    })
     return () => <>
-      {/* <el-form>
-        <el-form-item label='名字'>
-          <el-input></el-input>
-        </el-form-item>
-      </el-form> */}
-      <el-form model={form}>
+      <el-form model={form} ref={formRef} {...attrs}>
         {
           toPairs(newFormItem.value).map(([key, value]) => {
             return <>
-              <el-form-item {...omit(value, ['default', 'inner', 'prop'])} >
+              <el-form-item {...omit(value, ['default', 'inner', 'prop'])} ref={normalRef.son}>
                 {/* <myInput v-model={proxy[value.prop]}></myInput> */}
                 {/* {myInput('hhh')} */}
                 {/* {h(resolveComponent('el-input'))} */}
 
                 {/* {h(value.inner.is, { 'v-model': proxys[value.prop] })} */}
                 {/* {h(resolveComponent('el-input'), { 'v-model': proxy[value.prop] }, '按钮')} */}
-                <el-input v-model={proxys[value.prop]}></el-input>
+                <el-input v-model={proxys[value.prop]} {...omit(value.inner, ['is'])}></el-input>
                 {/* 批量书写也可以 */}
               </el-form-item></>
           })

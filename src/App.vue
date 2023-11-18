@@ -1,8 +1,14 @@
 <template>
   <!-- <CustomForm :form="form" :formItem="items"></CustomForm> -->
-  <CForm :form="form" :form-item="items" @submit="onSubmit"></CForm>
-  <!-- <Normal></Normal> -->
-  <el-button @click="add">插入一项</el-button>
+  <CForm
+    :form="form"
+    :form-item="items"
+    @submit="onSubmit"
+    label-width="100"
+    ref="formRef"
+  ></CForm>
+  <!-- <Normal ref="formRef"></Normal> -->
+  <el-button @click="console.log(formRef)">插入一项</el-button>
 </template>
 
 <script lang="tsx" setup>
@@ -10,29 +16,33 @@
 import CustomForm from "./CustomForm.vue";
 import CForm from "./CForm";
 import Normal from "./Normal";
-import { ref, markRaw } from "vue";
+import { ref, markRaw, onMounted } from "vue";
 import { ElInput } from "element-plus";
 // import { ElButton } from "element-plus";
 // import { ElInput, ElSwitch } from "element-plus";
+const formRef = ref<any>();
 
+onMounted(() => {
+  console.log(formRef.value);
+});
 const form = ref<any>({});
 // name字段名，后面提示
 const items = ref({
   // 默认input
   name: "姓名",
-  input2: {
-    inner: "el-input",
-    label: "输入2",
-    default: "默认输入2",
-  },
-  switch1: {
-    label: "开关1",
-    inner: markRaw(ElInput),
-    // inner: markRaw(ElInput),
-    // prop: "a[0].b.c",
-    prop: ["a", "c", "b", "c"],
-    // 如果输入数组，会在被proxys使用前转换为字符串，即['a','b']转换为'a,b'
-  },
+  // input2: {
+  //   inner: "el-input",
+  //   label: "输入2",
+  //   default: "默认输入2",
+  // },
+  // switch1: {
+  //   label: "开关1",
+  //   inner: markRaw(ElInput),
+  //   // inner: markRaw(ElInput),
+  //   // prop: "a[0].b.c",
+  //   prop: ["a", "c", "b", "c"],
+  //   // 如果输入数组，会在被proxys使用前转换为字符串，即['a','b']转换为'a,b'
+  // },
   // switch2: {
   //   label: "开关2",
   //   inner: {

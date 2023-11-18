@@ -1,22 +1,17 @@
-import { defineComponent, ref, h, resolveComponent } from "vue";
+import { defineComponent, ref, h, resolveComponent, onMounted } from "vue";
 export default defineComponent({
   name: "HelloWorld",
-  setup() {
-    const text = ref("欢迎关注公众号~WEB前端李志杰~");
+  setup(_, { expose }) {
+    const text = ref("欢迎关注公众号~WEB前端李志杰~")
+    onMounted(() => {
 
-    // let sum = new Function('a', 'b', 'return form');
-    // const proxys = new Proxy(form, {
-    //   get: function (target, property) {
-    //     // function返回值用于读取
-    //     return get(form, property)
-    //     // 如果是数组怎么办？预处理时将其转换为字符串
-    //   },
-    //   set: function (target, property, value) {
-    //     set(form, property, value)
-    //   }
-    // })
-    // console.log(sum(1, 2)); // the result is 3
-
+    })
+    const setExpose = () => {
+      expose({
+        a: 'eee'
+      })
+    }
+    setTimeout(setExpose)
     return () => (
       <>
         <h1>{text.value}</h1>

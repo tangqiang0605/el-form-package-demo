@@ -4,6 +4,7 @@
     <el-form-item
       v-for="item in newFormItem"
       v-bind="omit(item, ['default', 'inner', 'prop'])"
+      ref="formRef"
     >
       <component
         v-if="item.inner"
@@ -29,7 +30,7 @@ const prop = defineProps<{
 }>();
 // TODO 如何处理emit
 defineEmits(["onSubmit"]);
-
+// defineExpose()
 const onSubmit = () => {
   console.log(prop.form);
 };

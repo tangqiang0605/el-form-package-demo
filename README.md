@@ -27,3 +27,9 @@ https://zhuanlan.zhihu.com/p/423860019?utm_id=0&wd=&eqid=afdc27b5000037d80000000
 
 1. 无法绑定表达式。new function 不行，不支持 jsx。最后通过代理+lodash 解决了。
 2. 无法绑定到变量组件，需要预先写好 el-input 才能绑定 v-model。h 可以传入其它参数，但是不能接收 v-model。
+3. jsx 无法使用 component，因为 component 本来就不是组件，只是 template 的一个语法。
+
+## ＴＯＤＯ
+
+1. 检查是否支持自定义属性。表单的，表单项的，以及表单组件的。
+2. 将表单暴露方法都抛出去，记得绑定 this。defineExpose。
