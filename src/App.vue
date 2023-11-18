@@ -1,7 +1,8 @@
 <template>
-  <CustomForm :form="form" :formItem="items"></CustomForm>
-  <!-- <CForm :form="form" :form-item="items" @submit="onSubmit"></CForm> -->
+  <!-- <CustomForm :form="form" :formItem="items"></CustomForm> -->
+  <CForm :form="form" :form-item="items" @submit="onSubmit"></CForm>
   <!-- <Normal></Normal> -->
+  <el-button @click="add">插入一项</el-button>
 </template>
 
 <script lang="tsx" setup>
@@ -19,14 +20,14 @@ const form = ref<any>({});
 const items = ref({
   // 默认input
   name: "姓名",
-  // input2: {
-  //   inner: "el-input",
-  //   label: "输入2",
-  //   default: "默认输入2",
-  // },
+  input2: {
+    inner: "el-input",
+    label: "输入2",
+    default: "默认输入2",
+  },
   switch1: {
     label: "开关1",
-    inner: "el-input",
+    inner: markRaw(ElInput),
     // inner: markRaw(ElInput),
     // prop: "a[0].b.c",
     prop: ["a", "c", "b", "c"],
@@ -39,12 +40,21 @@ const items = ref({
   //   },
   // },
 });
-
+let count = 0;
+const add = () => {
+  items.value = {
+    ...items.value,
+    ["newItem" + count]: {
+      label: "项目" + count,
+      prop: ["a", "b", count],
+    },
+  };
+  count++;
+};
 // setTimeout(() => {
 //   console.log(items.value);
 // }, 2000);
 
-// TODO 多层传参
 // TODO 日期选择报黄
 // TODO 支持item内插槽
 // TODO 支持form插槽

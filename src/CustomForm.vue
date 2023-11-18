@@ -1,23 +1,25 @@
 <template>
   <el-form :model="form">
     <!-- TODO item是绑定到组件上，但是没有进行过滤 -->
-    <el-form-item v-for="item in newFormItem" v-bind="item">
+    <el-form-item
+      v-for="item in newFormItem"
+      v-bind="omit(item, ['default', 'inner', 'prop'])"
+    >
       <component
         v-if="item.inner"
         v-model="proxys[item.prop]"
         :is="item.inner.is"
-        v-bind="item.inner"
+        v-bind="omit(item.inner, ['prop', 'is'])"
       ></component>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">Create</el-button>
-      <el-button>Cancel</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup lang="ts">
-import { set, get } from "lodash-es";
+import { set, get, omit } from "lodash-es";
 import { compile, markRaw, onBeforeUpdate, onMounted, ref, watch } from "vue";
 
 // defineProp

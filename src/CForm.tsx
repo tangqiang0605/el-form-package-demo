@@ -1,12 +1,12 @@
 
-import { defineComponent, ref, onMounted, onBeforeUpdate, markRaw, h, resolveComponent } from 'vue'
+import { defineComponent, ref, onMounted, onBeforeUpdate, markRaw, h, resolveComponent, } from 'vue'
 import { get, set, toPairs, omit } from 'lodash-es'
 
 // const myInput = h(resolveComponent('el-input'))
 
 
 export default defineComponent({
-  components: ['myInput'],
+  components: ['myInput', 'el-input', 'el-switch'],
   props: {
     form: Object,
     formItem: Object,
@@ -146,7 +146,7 @@ export default defineComponent({
       }
     })
 
-    // const myInput = (str) => <>{str}</>
+    // const myInput = (str) => <></>
     return () => <>
       {/* <el-form>
         <el-form-item label='名字'>
@@ -161,11 +161,11 @@ export default defineComponent({
                 {/* <myInput v-model={proxy[value.prop]}></myInput> */}
                 {/* {myInput('hhh')} */}
                 {/* {h(resolveComponent('el-input'))} */}
-                {/* <component is={} v-model={proxys[value.prop]}></component> */}
+
                 {/* {h(value.inner.is, { 'v-model': proxys[value.prop] })} */}
                 {/* {h(resolveComponent('el-input'), { 'v-model': proxy[value.prop] }, '按钮')} */}
-                {/* <el-input v-model={proxys[value.prop]}></el-input> */}
-                {/* <el-input v-model={proxys[value.prop]}></el-input> */}
+                <el-input v-model={proxys[value.prop]}></el-input>
+                {/* 批量书写也可以 */}
               </el-form-item></>
           })
         }
