@@ -7,7 +7,9 @@
     label-width="100"
     ref="formRef"
     @validate="show"
-  ></CForm>
+  >
+    <template #default-input2> hello </template>
+  </CForm>
   <!-- <Normal ref="formRef"></Normal> -->
   <el-button @click="getSomething">插入一项</el-button>
 </template>
