@@ -15,14 +15,8 @@
 </template>
 
 <script lang="tsx" setup>
-// import { ref, h, markRaw, resolveComponent } from "vue";
-import CustomForm from "./CustomForm.vue";
 import CForm from "./CForm";
-import Normal from "./Normal";
-import { ref, markRaw, onMounted } from "vue";
-import { ElInput } from "element-plus";
-// import { ElButton } from "element-plus";
-// import { ElInput, ElSwitch } from "element-plus";
+import { ref } from "vue";
 const formRef = ref<any>();
 const getSomething = async () => {
   const result = await formRef.value.formRef.validate();
@@ -31,12 +25,6 @@ const getSomething = async () => {
 const show = () => {
   console.log("事件被触发，透传成功");
 };
-onMounted(() => {
-  // console.log(formRef.value.validate);
-  // console.log(formRef.validate);
-  // console.log(formRef.value.validate);
-});
-// console.log(ElInput.name);
 const form = ref<any>({});
 // name字段名，后面提示
 const items = ref({
@@ -70,25 +58,6 @@ const items = ref({
   //   },
   // },
 });
-let count = 0;
-const add = () => {
-  items.value = {
-    ...items.value,
-    ["newItem" + count]: {
-      label: "项目" + count,
-      prop: ["a", "b", count],
-    },
-  };
-  count++;
-};
-// setTimeout(() => {
-//   console.log(items.value);
-// }, 2000);
-
-// TODO 日期选择报黄
-// TODO 支持item内插槽
-// TODO 支持form插槽
-// TODO 支持自动导入
 const onSubmit = () => {
   console.log("外部得到的值", form.value);
   // console.log("submit!");
